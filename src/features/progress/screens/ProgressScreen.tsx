@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useRef } from 'react';
 import {
     Animated,
@@ -10,7 +10,7 @@ import {
     View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import type { MainTabParamList } from '../../../navigation/types';
+import type { ProgressStackParamList } from '../../../navigation/types';
 import MonthlyTrendChart from '../components/MonthlyTrendChart';
 import PRList from '../components/PRList';
 import { PT } from '../components/ProgressTheme';
@@ -21,7 +21,7 @@ import {
     WEEKLY_BARS,
 } from '../data/progressData';
 
-type Props = BottomTabScreenProps<MainTabParamList, 'Progress'>;
+type Props = NativeStackScreenProps<ProgressStackParamList, 'ProgressHome'>;
 
 // ──────────────────────────────────────────────────────────────────
 // STAT CARD
@@ -157,12 +157,42 @@ const ctStyles = StyleSheet.create({
 // WORKOUT HISTORY
 // ──────────────────────────────────────────────────────────────────
 const WORKOUTS = [
-    { id: '1', name: 'Full Body', duration: '48 min', score: 92, icon: 'barbell-outline' as const },
-    { id: '2', name: 'Upper Body', duration: '35 min', score: 85, icon: 'fitness-outline' as const },
-    { id: '3', name: 'Lower Body', duration: '40 min', score: 88, icon: 'bicycle-outline' as const },
+    {
+        id: '1',
+        name: 'Full Body',
+        duration: '48 min',
+        score: 92,
+        calories: 420,
+        icon: 'barbell-outline' as const,
+        workoutType: 'full_body' as const,
+        muscleFocus: ['Chest', 'Back', 'Legs', 'Shoulders'],
+        suggestions: ['Slow down on deadlifts for better form.', 'Add 5 kg to bench press next session.'],
+    },
+    {
+        id: '2',
+        name: 'Upper Body',
+        duration: '35 min',
+        score: 85,
+        calories: 290,
+        icon: 'fitness-outline' as const,
+        workoutType: 'upper_body' as const,
+        muscleFocus: ['Chest', 'Shoulders', 'Triceps', 'Biceps'],
+        suggestions: ['Focus on slow negatives for triceps.', 'Increase shoulder volume by 10%.'],
+    },
+    {
+        id: '3',
+        name: 'Lower Body',
+        duration: '40 min',
+        score: 88,
+        calories: 380,
+        icon: 'bicycle-outline' as const,
+        workoutType: 'lower_body' as const,
+        muscleFocus: ['Quads', 'Glutes', 'Hamstrings', 'Calves'],
+        suggestions: ['Add Bulgarian split squats next week.', 'Great squat depth today!'],
+    },
 ];
 
-const WorkoutHistory: React.FC = () => (
+const WorkoutHistory: React.FC<{ navigation: Props['navigation'] }> = ({ navigation }) => (
     <View style={whStyles.card}>
         <View style={whStyles.header}>
             <Text style={whStyles.title}>Recent Workouts</Text>
@@ -176,6 +206,14 @@ const WorkoutHistory: React.FC = () => (
                     style={whStyles.row}
                     activeOpacity={0.7}
                     accessibilityLabel={`${w.name} ${w.duration}`}
+                    onPress={() => navigation.navigate('WorkoutSummary', {
+                        workoutType: w.workoutType,
+                        score: w.score,
+                        duration: w.duration,
+                        calories: w.calories,
+                        muscleFocus: w.muscleFocus,
+                        suggestions: w.suggestions,
+                    })}
                 >
                     <View style={whStyles.iconWrap}>
                         <Ionicons name={w.icon} size={20} color={PT.accent} />
@@ -323,7 +361,7 @@ const abStyles = StyleSheet.create({
 // ──────────────────────────────────────────────────────────────────
 // PROGRESS SCREEN
 // ──────────────────────────────────────────────────────────────────
-const ProgressScreen: React.FC<Props> = () => {
+const ProgressScreen: React.FC<Props> = ({ navigation }) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -380,7 +418,7 @@ const ProgressScreen: React.FC<Props> = () => {
                     <ConsistencyTracker />
 
                     {/* Workout History */}
-                    <WorkoutHistory />
+                    <WorkoutHistory navigation={navigation} />
 
                     {/* Personal Records */}
                     <PRList records={PERSONAL_RECORDS} />

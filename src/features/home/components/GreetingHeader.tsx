@@ -1,6 +1,6 @@
 // File: src/features/home/components/GreetingHeader.tsx
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import AppText from '../../../components/AppText';
 import { Colors, Spacing } from '../../../theme';
 
@@ -38,7 +38,7 @@ const GreetingHeader = () => {
                 </View>
                 {/* Avatar placeholder */}
                 <View style={styles.avatar}>
-                    <AppText variant="h3" align="center">💪</AppText>
+                    <AppText variant="h3" style={{ textAlign: 'center' }}>💪</AppText>
                 </View>
             </View>
         </Animated.View>

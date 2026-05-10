@@ -21,10 +21,17 @@
     },
     "plugins": [
       "expo-router",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow workout-ui-sandbox to access your camera to track your movements."
+        }
+      ]
     ],
     "updates": {
-      "enabled": false
+      "enabled": false,
+      "fallbackToCacheTimeout": 0
     }
   }
 }

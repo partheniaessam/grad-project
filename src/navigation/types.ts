@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { ExerciseType } from '../features/workout/data/workoutData';
 
 // Root Stack
 export type RootStackParamList = {
@@ -41,8 +42,42 @@ export type ProfileSetupStackParamList = {
 export type MainTabParamList = {
     Home: undefined;
     Workout: undefined;
-    Progress: undefined;
-    Profile: undefined;
+    ProgressStack: undefined;   // wraps Progress + WorkoutSummary
+    AICoach: undefined;
+    ProfileStack: undefined;    // wraps Profile + Privacy + Help + About
+};
+
+// Profile stack (nested under ProfileStack tab)
+export type ProfileStackParamList = {
+    ProfileHome: undefined;
+    PrivacySettings: undefined;
+    Help: undefined;
+    AboutApp: undefined;
+};
+
+// Progress stack (nested under ProgressStack tab)
+export type ProgressStackParamList = {
+    ProgressHome: undefined;
+    WorkoutSummary: {
+        workoutType: 'full_body' | 'upper_body' | 'lower_body';
+        score: number;
+        duration: string;
+        calories: number;
+        muscleFocus: string[];
+        suggestions: string[];
+    };
+};
+
+// Workout Stack (nested under Workout tab)
+export type WorkoutStackParamList = {
+    WorkoutSelection: undefined;
+    FullBodyWorkout: undefined;
+    UpperWorkout: undefined;
+    LowerWorkout: undefined;
+    CustomWorkout: undefined;
+    ExerciseDetails: { exercise: ExerciseType };
+    Tracking: { exercise: ExerciseType };
+    WorkoutComplete: { workoutType: string };
 };
 
 // Screen Props helpers
@@ -58,3 +93,12 @@ export type OnboardingStackScreenProps<T extends keyof OnboardingStackParamList>
 export type ProfileSetupStackScreenProps<
     T extends keyof ProfileSetupStackParamList,
 > = NativeStackScreenProps<ProfileSetupStackParamList, T>;
+
+export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> =
+    NativeStackScreenProps<ProfileStackParamList, T>;
+
+export type ProgressStackScreenProps<T extends keyof ProgressStackParamList> =
+    NativeStackScreenProps<ProgressStackParamList, T>;
+
+export type WorkoutStackScreenProps<T extends keyof WorkoutStackParamList> =
+    NativeStackScreenProps<WorkoutStackParamList, T>;
